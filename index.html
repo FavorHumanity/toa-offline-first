@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<!-- doc-id: Y77F-TOA-DEMO-20261026-648c8521 -->
+<meta name="author" content="Favor Figota Taueva">
+<meta name="copyright" content="© 2026 Y77FAST SOFTWARE FOUNDATION. All rights reserved.">
+<meta name="doc-id" content="Y77F-TOA-DEMO-20261026-648c8521"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Toa Offline First (prototype)</title>
+<style>
+:root{--gold:#F5C542;--gold2:#E8B923;--card:#0B2A4F;--g:linear-gradient(90deg,#8E44AD,#FF5FA2);--ok:#5EE6A0;--bad:#FF8A80;--warn:#FFD166}
+*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Roboto,Arial,sans-serif;background:#07203D;color:#F2F7FC;min-height:100vh}
+header{background:#0B2A4F;padding:20px 28px;border-bottom:3px solid transparent;border-image:var(--g) 1}
+header h1{margin:0;font-size:26px;color:var(--gold);text-shadow:0 2px 6px rgba(0,0,0,.35)}header .tag{color:#E6F1FB;font-size:14px;margin-top:4px;letter-spacing:.3px}
+.banner{background:#FFF4D6;padding:8px 28px;font-size:13px;color:#4a3800;border-bottom:3px solid transparent;border-image:var(--g) 1}
+main{max-width:1150px;margin:22px auto;padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.card{border:2px solid transparent;border-radius:12px;padding:16px 18px;background:linear-gradient(var(--card),var(--card)) padding-box,var(--g) border-box;box-shadow:0 8px 24px rgba(4,20,45,.35)}
+.card h2{margin:0 0 10px;font-size:18px;color:var(--gold)}.full{grid-column:1/-1}
+label{display:block;font-size:12px;color:#CFE3F5;margin-top:8px}input,select{width:100%;padding:7px;border:1px solid #6C8DB5;border-radius:6px;font-size:14px;background:#07203D;color:#fff}
+button{background:linear-gradient(90deg,#E8B923,#F5C542);color:#1A1A1A;font-weight:600;border:0;border-radius:6px;padding:8px 14px;margin-top:10px;cursor:pointer;font-size:14px}button:hover{filter:brightness(1.08)}
+button.sec{background:var(--g);color:#fff}
+table{width:100%;border-collapse:collapse;font-size:12.5px;border:1px solid transparent;border-image:var(--g) 1}th,td{border-bottom:1px solid rgba(255,95,162,.35);padding:5px;text-align:left;vertical-align:top}th{background:#123A68;color:var(--gold)}
+.mono{font-family:Consolas,monospace;font-size:11px;word-break:break-all;color:#BFE0FF}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;color:#fff;background:var(--g)}
+.ok{color:var(--ok);font-weight:600}.bad{color:var(--bad);font-weight:600}.warn{color:var(--warn);font-weight:600}
+.wallets{display:grid;grid-template-columns:1fr 1fr;gap:10px}.w{border:1px solid transparent;border-image:var(--g) 1;padding:10px;font-size:13px;background:#0F3460}
+.fake{background:#FFF4D6;color:#4a3800;border-left:5px solid var(--gold2);padding:8px 10px;font-size:13px;font-weight:600;border-radius:4px}
+#msg{margin-top:10px;font-size:13px}footer{text-align:center;font-size:12px;color:#EAF4FD;padding:20px}
+.note{font-size:12px;color:#CFE3F5}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style></head><body>
+<header><h1>Toa Offline First (prototype) <span class="pill">DEMO</span><span class="vh" aria-hidden="true">Y77F-TOA-DEMO-20261026-648c8521</span></h1><div class="tag">Y77FAST SOFTWARE FOUNDATION · offline-first digital ID prototype</div></header>
+<div class="banner"><b>Prototype only.</b> All names, IDs and balances are fake demo data. No real money, no real identity checks, no network calls. Tier limits follow the Y77FAST Tiered KYC Plan (draft, 13 Oct 2026); limits marked † are proposed internal limits, not set by law. Not legal advice.</div>
+<main>
+<section class="card"><h2>I · Create digital ID (tiered KYC)</h2>
+<div class="fake" role="alert">FAKE DATA ONLY. Do not type real personal data. Nothing leaves this page, and everything is lost when you reload.</div>
+<label>Full name (fake demo name)</label><input id="nm" maxlength="60" value="Demo User C" autocomplete="off">
+<label>Address (fake demo address)</label><input id="ad" maxlength="80" value="Demo Village, Upolu" autocomplete="off">
+<label>Phone (fake demo number)</label><input id="ph" maxlength="30" value="+685 000 0003" autocomplete="off">
+<label>KYC tier</label><select id="tr"></select>
+<div id="tierInfo" style="font-size:12px;margin-top:8px;color:#CFE3F5"></div>
+<button onclick="createID()">Create demo ID + wallet</button></section>
+<section class="card"><h2>KYC tiers (from plan)</h2><table><tr><th>Tier</th><th>Verification (summary)</th><th>Per transfer</th><th>Monthly</th></tr><tbody id="tierTbl"></tbody></table>
+<p class="note">Not connected to any national system. This is an early prototype used to explain an idea.</p></section>
+<section class="card full"><h2>II · Fake-money transfer (tier limits enforced)</h2><div class="wallets" id="wallets"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end">
+<div><label>From</label><select id="fr"></select></div><div><label>To</label><select id="to"></select></div>
+<div><label>Amount (SAT, demo units)</label><input id="amt" type="number" value="150"></div><button onclick="transfer()">Send</button></div>
+<div id="msg"></div></section>
+<section class="card full"><h2>III · Edit-detecting ledger (SHA-256 hash chain)</h2>
+<div id="sigstat" class="note" style="margin-bottom:6px"></div>
+<p class="note" style="margin:0 0 8px">What this does: each block holds the hash of the block before it, so editing any block breaks the chain and “Verify” flags the first broken block. In hash-only mode it does <b>not</b> stop someone who rewrites the whole chain and recomputes every hash. When signing is on, each block hash is also signed with a key held in this page’s memory for this session only, and “Verify” checks the signatures too. The key and all data are lost when you reload.</p>
+<button onclick="verify()">Verify</button> <button class="sec" onclick="tamper()">Simulate edit (block I)</button> <button class="sec" onclick="rewrite()">Simulate full rewrite (re-hash, no key)</button> <button class="sec" onclick="reset()">Reset demo</button>
+<div id="vres" style="margin-top:8px;font-size:13px"></div>
+<table style="margin-top:8px"><tr><th>#</th><th>Time</th><th>Event</th><th>Prev hash</th><th>Hash</th><th>Signature</th></tr><tbody id="led"></tbody></table></section>
+<section class="card full"><h2>About</h2><p>Toa Offline First is an early prototype from Y77FAST SOFTWARE FOUNDATION. It shows how a digital ID and a simple ledger can work in a browser with no internet. Like a canoe built plank by plank, every record here is lashed to the one before it.</p><p class="note">This page is a prototype for review. Every name, ID and balance is fake demo data; no real money moves and no real identity is checked. It has not been audited.</p><span class="vh" aria-hidden="true">Y77F-TOA-DEMO-20261026-648c8521 crimson reef guards three amber heron at dawn</span></section>
+</main><footer>© 2026 Y77FAST SOFTWARE FOUNDATION. All rights reserved. · Prototype · Runs offline in your browser<span class="vh" aria-hidden="true">Y77F-TOA-DEMO-20261026-648c8521</span></footer><!-- Y77F-TOA-DEMO-20261026-648c8521 -->
+<script>
+const TIERS={0:{name:"Tier 0 Basic",ver:"Name, address, nature of activity and phone†",tx:300,mo:1000,bal:1000},
+1:{name:"Tier 1 Standard",ver:"ID document plus one independent source†",tx:2000,mo:5000,bal:null},
+2:{name:"Tier 2 Full / Enhanced",ver:"Full ID document, several independent sources and a liveness check†",tx:19999,mo:50000,bal:null}};
+const esc=s=>String(s).replace(/[&<>"'`]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;","`":"&#96;"}[c]));
+const fmt=n=>"SAT "+Number(n).toLocaleString();
+const hex=u=>[...new Uint8Array(u)].map(x=>x.toString(16).padStart(2,"0")).join("");
+const unhex=h=>new Uint8Array(h.match(/../g).map(x=>parseInt(x,16)));
+const enc=s=>new TextEncoder().encode(s);
+let wallets,ledger,kp=null,sigMode=false,fp="";
+async function sha(d){return hex(await crypto.subtle.digest("SHA-256",typeof d==="string"?enc(d):d))}
+async function initSigning(){const s=document.getElementById("sigstat");
+try{kp=await crypto.subtle.generateKey({name:"Ed25519"},false,["sign","verify"]);fp=(await sha(await crypto.subtle.exportKey("raw",kp.publicKey))).slice(0,16).match(/.{4}/g).join(" ");sigMode=true;
+s.innerHTML=`Signing: <span class="ok">ON</span> (Ed25519, browser feature). Session public-key fingerprint: <span class="mono">${esc(fp)}</span>. The key lives in page memory for this session only.`}
+catch(e){kp=null;sigMode=false;s.innerHTML=`Signing: <span class="warn">OFF</span>. This browser does not support Ed25519 signing, so the ledger runs in hash-chain-only mode. Hash-chain-only mode detects edits to a block but not a full rewrite of the chain.`}}
+const payload=b=>JSON.stringify({i:b.i,t:b.t,e:b.e,prev:b.prev});
+async function addBlock(e){const prev=ledger.length?ledger[ledger.length-1].hash:"0".repeat(64);const b={i:ledger.length,t:new Date().toLocaleString(),e,prev,sig:""};b.hash=await sha(payload(b));
+if(sigMode)b.sig=hex(await crypto.subtle.sign({name:"Ed25519"},kp.privateKey,enc(b.hash)));ledger.push(b)}
+function id(){return "DEMO-"+Math.random().toString(36).slice(2,8).toUpperCase()}
+async function reset(){wallets=[{id:"DEMO-A1",name:"Demo User A",tier:0,bal:800,month:0},{id:"DEMO-B2",name:"Demo User B",tier:1,bal:3000,month:0}];ledger=[];
+await addBlock("GENESIS — demo ledger opened");for(const w of wallets)await addBlock(`ID created ${w.id} (${w.name}) ${TIERS[w.tier].name}; opening demo balance ${fmt(w.bal)}`);render();document.getElementById("vres").textContent="";msg("")}
+function msg(h){document.getElementById("msg").innerHTML=h}
+function render(){const t=document.getElementById("tierTbl");
+t.innerHTML=Object.entries(TIERS).map(([k,v])=>`<tr><td>${esc(v.name)}</td><td>${esc(v.ver)}</td><td>≤ ${esc(fmt(v.tx))}†</td><td>≤ ${esc(fmt(v.mo))}†${v.bal?"<br><small>balance ≤ "+esc(fmt(v.bal))+"†</small>":""}</td></tr>`).join("");
+document.getElementById("wallets").innerHTML=wallets.map(w=>`<div class="w"><b>${esc(w.name)}</b> <span class="pill">${esc(TIERS[w.tier].name)}</span><br>ID: ${esc(w.id)}<br>Balance: <b>${esc(fmt(w.bal))}</b><br>Sent this month: ${esc(fmt(w.month))} / ${esc(fmt(TIERS[w.tier].mo))}</div>`).join("");
+const opts=wallets.map((w,i)=>`<option value="${i}">${esc(w.name)} (${esc(w.id)})</option>`).join("");const fr=document.getElementById("fr"),to=document.getElementById("to");const a=fr.value,b=to.value;fr.innerHTML=opts;to.innerHTML=opts;fr.value=a||0;to.value=b||1;
+document.getElementById("led").innerHTML=ledger.map(b=>`<tr id="r${esc(b.i)}"><td>${esc(b.i)}</td><td>${esc(b.t)}</td><td>${esc(b.e)}</td><td class="mono">${esc(b.prev.slice(0,16))}…</td><td class="mono">${esc(b.hash.slice(0,16))}…</td><td class="mono">${b.sig?esc(b.sig.slice(0,16))+"…":"—"}</td></tr>`).join("")}
+async function createID(){const n=nm.value.trim(),a=ad.value.trim(),p=ph.value.trim(),t=+tr.value;if(!n||!a||!p){alert("Name, address and phone are required for this demo (fake data only).");return}
+const w={id:id(),name:n,tier:t,bal:t==0?500:2500,month:0};wallets.push(w);await addBlock(`ID created ${w.id} (${n}) ${TIERS[t].name}; opening demo balance ${fmt(w.bal)}`);render();msg(`<span class="ok">✔ Demo ID ${esc(w.id)} created at ${esc(TIERS[t].name)}.</span>`)}
+async function transfer(){const f=wallets[+fr.value],t=wallets[+to.value],a=+amt.value,L=TIERS[f.tier];let why=null;
+if(f===t)why="Sender and receiver must differ.";else if(!(a>0))why="Enter a positive amount.";
+else if(a>L.tx)why=`Over ${L.name} per-transfer limit (${fmt(L.tx)}†). Upgrade KYC tier.`;
+else if(f.month+a>L.mo)why=`Over ${L.name} monthly limit (${fmt(L.mo)}†).`;
+else if(a>f.bal)why="Insufficient demo balance.";
+else if(TIERS[t.tier].bal&&t.bal+a>TIERS[t.tier].bal)why=`Receiver would exceed ${TIERS[t.tier].name} balance cap (${fmt(TIERS[t.tier].bal)}†).`;
+if(why){await addBlock(`REJECTED ${fmt(a)} ${f.id} → ${t.id}: ${why}`);render();msg(`<span class="bad">✖ Blocked:</span> ${esc(why)}`);return}
+f.bal-=a;f.month+=a;t.bal+=a;await addBlock(`TRANSFER ${fmt(a)} ${f.id} → ${t.id} | originator: ${f.name}, acct ${f.id}`);render();msg(`<span class="ok">✔ Sent ${esc(fmt(a))}</span> from ${esc(f.name)} to ${esc(t.name)}.`)}
+async function verify(){let bad=-1,why="";for(let i=0;i<ledger.length;i++){const b=ledger[i],exp=i?ledger[i-1].hash:"0".repeat(64);
+if(b.prev!==exp||await sha(payload(b))!==b.hash){bad=i;why="contents no longer match the stored hash";break}
+if(sigMode){let good=false;try{good=!!b.sig&&await crypto.subtle.verify({name:"Ed25519"},kp.publicKey,unhex(b.sig),enc(b.hash))}catch(e){}if(!good){bad=i;why="signature does not match";break}}}
+document.querySelectorAll("#led tr").forEach(r=>r.style.background="");const v=document.getElementById("vres");
+if(bad<0)v.innerHTML=`<span class="ok">✔ ${ledger.length} blocks: every hash matches${sigMode?" and every signature checks out":""}.</span>`+(sigMode?"":` <span class="warn">Hash-chain-only mode: a full rewrite of the chain would not be detected.</span>`);
+else{v.innerHTML=`<span class="bad">✖ First broken block: ${esc(bad)} (${esc(why)}).</span>`;const r=document.getElementById("r"+bad);if(r)r.style.background="rgba(255,95,162,.35)"}}
+function tamper(){if(ledger.length>1){ledger[1].e=ledger[1].e.replace(/SAT [\d,]+/,"SAT 99,999");render();document.getElementById("vres").innerHTML='<span class="warn">Block I text edited without re-hashing. Click “Verify”.</span>'}}
+async function rewrite(){if(ledger.length>1){ledger[1].e=ledger[1].e.replace(/SAT [\d,]+/,"SAT 99,999");for(let i=1;i<ledger.length;i++){ledger[i].prev=ledger[i-1].hash;ledger[i].hash=await sha(payload(ledger[i]))}render();
+document.getElementById("vres").innerHTML='<span class="warn">Block I edited and every later hash recomputed, with no signing key. Click “Verify”.</span>'}}
+document.getElementById("tr").innerHTML=Object.entries(TIERS).map(([k,v])=>`<option value="${esc(k)}">${esc(v.name)}</option>`).join("");
+tr.onchange=()=>{const v=TIERS[tr.value];tierInfo.textContent=`${v.ver}. Limits: ≤ ${fmt(v.tx)}† per transfer, ≤ ${fmt(v.mo)}† monthly.`};tr.onchange();initSigning().then(reset);
+</script></body></html>
