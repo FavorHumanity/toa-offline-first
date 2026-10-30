@@ -3,7 +3,7 @@
 <meta name="author" content="Favor Figota Taueva">
 <meta name="copyright" content="© 2026 Y77FAST SOFTWARE FOUNDATION. All rights reserved.">
 <meta name="doc-id" content="Y77F-TOA-DEMO-20261026-648c8521"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Toa Offline First (prototype)</title>
+<title>Secure Toa (SI) Offline First (prototype)</title>
 <style>
 :root{--gold:#F5C542;--gold2:#E8B923;--card:#0B2A4F;--g:linear-gradient(90deg,#8E44AD,#FF5FA2);--ok:#5EE6A0;--bad:#FF8A80;--warn:#FFD166}
 *{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Roboto,Arial,sans-serif;background:#07203D;color:#F2F7FC;min-height:100vh}
@@ -26,7 +26,7 @@ table{width:100%;border-collapse:collapse;font-size:12.5px;border:1px solid tran
 .note{font-size:12px;color:#CFE3F5}
 .vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style></head><body>
-<header><h1>Toa Offline First (prototype) <span class="pill">DEMO</span><span class="vh" aria-hidden="true">Y77F-TOA-DEMO-20261026-648c8521</span></h1><div class="tag">Y77FAST SOFTWARE FOUNDATION · offline-first digital ID prototype</div></header>
+<header><h1>Secure Toa (SI) Offline First (prototype) <span class="pill">DEMO</span><span class="vh" aria-hidden="true">Y77F-TOA-DEMO-20261026-648c8521</span></h1><div class="tag">Y77FAST SOFTWARE FOUNDATION · offline-first digital ID prototype</div></header>
 <div class="banner"><b>Prototype only.</b> All names, IDs and balances are fake demo data. No real money, no real identity checks, no network calls. Tier limits follow the Y77FAST Tiered KYC Plan (draft, 13 Oct 2026); limits marked † are proposed internal limits, not set by law. Not legal advice.</div>
 <main>
 <section class="card"><h2>I · Create digital ID (tiered KYC)</h2>
@@ -50,7 +50,7 @@ table{width:100%;border-collapse:collapse;font-size:12.5px;border:1px solid tran
 <button onclick="verify()">Verify</button> <button class="sec" onclick="tamper()">Simulate edit (block I)</button> <button class="sec" onclick="rewrite()">Simulate full rewrite (re-hash, no key)</button> <button class="sec" onclick="reset()">Reset demo</button>
 <div id="vres" style="margin-top:8px;font-size:13px"></div>
 <table style="margin-top:8px"><tr><th>#</th><th>Time</th><th>Event</th><th>Prev hash</th><th>Hash</th><th>Signature</th></tr><tbody id="led"></tbody></table></section>
-<section class="card full"><h2>About</h2><p>Toa Offline First is an early prototype from Y77FAST SOFTWARE FOUNDATION. It shows how a digital ID and a simple ledger can work in a browser with no internet. Like a canoe built plank by plank, every record here is lashed to the one before it.</p><p class="note">This page is a prototype for review. Every name, ID and balance is fake demo data; no real money moves and no real identity is checked. It has not been audited.</p><span class="vh" aria-hidden="true">Y77F-TOA-DEMO-20261026-648c8521 crimson reef guards three amber heron at dawn</span></section>
+<section class="card full"><h2>About</h2><p>Secure Toa (SI) Offline First is an early prototype from Y77FAST SOFTWARE FOUNDATION. It shows how a digital ID and a simple ledger can work in a browser with no internet. Like a canoe built plank by plank, every record here is lashed to the one before it.</p><p class="note">This page is a prototype for review. Every name, ID and balance is fake demo data; no real money moves and no real identity is checked. It has not been audited.</p><span class="vh" aria-hidden="true">Y77F-TOA-DEMO-20261026-648c8521 crimson reef guards three amber heron at dawn</span></section>
 </main><footer>© 2026 Y77FAST SOFTWARE FOUNDATION. All rights reserved. · Prototype · Runs offline in your browser<span class="vh" aria-hidden="true">Y77F-TOA-DEMO-20261026-648c8521</span></footer><!-- Y77F-TOA-DEMO-20261026-648c8521 -->
 <script>
 const TIERS={0:{name:"Tier 0 Basic",ver:"Name, address, nature of activity and phone†",tx:300,mo:1000,bal:1000},
