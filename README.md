@@ -1,4 +1,4 @@
-# Toa Offline First (prototype)
+# Secure Toa (SI) Offline First (prototype)
 
 An offline browser prototype of a digital ID wallet with a tiered limits table and an edit-detecting ledger. **Fake data only.**
 
