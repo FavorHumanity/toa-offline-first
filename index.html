@@ -70,7 +70,7 @@ catch(e){kp=null;sigMode=false;s.innerHTML=`Signing: <span class="warn">OFF</spa
 const payload=b=>JSON.stringify({i:b.i,t:b.t,e:b.e,prev:b.prev});
 async function addBlock(e){const prev=ledger.length?ledger[ledger.length-1].hash:"0".repeat(64);const b={i:ledger.length,t:new Date().toLocaleString(),e,prev,sig:""};b.hash=await sha(payload(b));
 if(sigMode)b.sig=hex(await crypto.subtle.sign({name:"Ed25519"},kp.privateKey,enc(b.hash)));ledger.push(b)}
-function id(){return "DEMO-"+Math.random().toString(36).slice(2,8).toUpperCase()}
+function id(){let v;do{v="DEMO-"+Math.random().toString(36).slice(2,8).toUpperCase().padEnd(6,"0")}while(wallets.some(w=>w.id===v));return v}
 async function reset(){wallets=[{id:"DEMO-A1",name:"Demo User A",tier:0,bal:800,month:0},{id:"DEMO-B2",name:"Demo User B",tier:1,bal:3000,month:0}];ledger=[];
 await addBlock("GENESIS — demo ledger opened");for(const w of wallets)await addBlock(`ID created ${w.id} (${w.name}) ${TIERS[w.tier].name}; opening demo balance ${fmt(w.bal)}`);render();document.getElementById("vres").textContent="";msg("")}
 function msg(h){document.getElementById("msg").innerHTML=h}
@@ -83,6 +83,7 @@ async function createID(){const n=nm.value.trim(),a=ad.value.trim(),p=ph.value.t
 const w={id:id(),name:n,tier:t,bal:t==0?500:2500,month:0};wallets.push(w);await addBlock(`ID created ${w.id} (${n}) ${TIERS[t].name}; opening demo balance ${fmt(w.bal)}`);render();msg(`<span class="ok">✔ Demo ID ${esc(w.id)} created at ${esc(TIERS[t].name)}.</span>`)}
 async function transfer(){const f=wallets[+fr.value],t=wallets[+to.value],a=+amt.value,L=TIERS[f.tier];let why=null;
 if(f===t)why="Sender and receiver must differ.";else if(!(a>0))why="Enter a positive amount.";
+else if(!Number.isInteger(a))why="Enter a whole amount (SAT demo units, no fractions).";
 else if(a>L.tx)why=`Over ${L.name} per-transfer limit (${fmt(L.tx)}†). Upgrade KYC tier.`;
 else if(f.month+a>L.mo)why=`Over ${L.name} monthly limit (${fmt(L.mo)}†).`;
 else if(a>f.bal)why="Insufficient demo balance.";

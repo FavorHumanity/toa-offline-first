@@ -15,6 +15,9 @@ An offline browser prototype of a digital ID wallet with a tiered limits table a
 ## How to run
 Open `index.html` in a modern browser. No install, no build, no internet, no outside libraries. `page.html` is a short landing page that links to it.
 
+## Tests
+Run `node --test tests/*.test.mjs` (Node 22 or newer, no packages to install). The 16 tests run the page's own script with a small stand-in for the page and check: the SHA-256 hash chain, Ed25519 signatures on every block, detection of an edited block, a deleted block, a swapped or broken signature and a full rewrite (caught when signing is on; not caught in hash-only mode, and the page says so), the transfer limits, unique IDs, escaping of typed text, and that the files make no network calls. CI runs the same tests on every push.
+
 ## The offline-first idea
 Build the basics so they work on the device first, and treat the network as a bonus. If the link drops, the person can still be identified, a transfer can still be checked against limits, and the record of what happened can still be checked for edits.
 
@@ -26,6 +29,8 @@ Build the basics so they work on the device first, and treat the network as a bo
 
 ## Known limits
 - Everything resets when the page is reloaded.
+- Removing blocks from the end of the chain is not detected, because there is no signed block count.
+- Amounts must be whole demo units.
 - Signing keys are made fresh for each session and live in page memory only.
 - Without signing support, the chain detects edits to a block but cannot detect a full rewrite with every hash recomputed.
 - The checks run in the browser only. Nothing here is a substitute for a reviewed design.

@@ -1,0 +1,9 @@
+{
+  "name": "secure-toa-si-offline-first",
+  "private": true,
+  "description": "Secure Toa (SI) Offline First prototype tests (fake data only). © 2026 Y77FAST SOFTWARE FOUNDATION. All rights reserved.",
+  "author": "Favor Figota Taueva",
+  "license": "SEE LICENSE IN LICENSE",
+  "scripts": { "test": "node --test tests/*.test.mjs" },
+  "engines": { "node": ">=22" }
+}
